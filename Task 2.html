@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .stopwatch-container {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .start { background: green; color: white; }
+        .stop { background: red; color: white; }
+        .reset { background: orange; color: white; }
+        .lap { background: blue; color: white; }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .laps {
+            margin-top: 20px;
+            width: 250px;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stopwatch-container" id="display">00:00:00</div>
+
+    <div class="buttons">
+        <button class="start" onclick="startStopwatch()">Start</button>
+        <button class="stop" onclick="stopStopwatch()">Stop</button>
+        <button class="reset" onclick="resetStopwatch()">Reset</button>
+        <button class="lap" onclick="lapTime()">Lap</button>
+    </div>
+
+    <div class="laps" id="laps"></div>
+
+    <script>
+        let timer;
+        let seconds = 0, minutes = 0, hours = 0;
+        let running = false;
+
+        function updateDisplay() {
+            let display = document.getElementById("display");
+            let formattedTime = 
+                (hours < 10 ? "0" : "") + hours + ":" +
+                (minutes < 10 ? "0" : "") + minutes + ":" +
+                (seconds < 10 ? "0" : "") + seconds;
+            display.innerText = formattedTime;
+        }
+
+        function startStopwatch() {
+            if (!running) {
+                running = true;
+                timer = setInterval(() => {
+                    seconds++;
+                    if (seconds === 60) {
+                        seconds = 0;
+                        minutes++;
+                    }
+                    if (minutes === 60) {
+                        minutes = 0;
+                        hours++;
+                    }
+                    updateDisplay();
+                }, 1000);
+            }
+        }
+
+        function stopStopwatch() {
+            running = false;
+            clearInterval(timer);
+        }
+
+        function resetStopwatch() {
+            stopStopwatch();
+            seconds = 0; minutes = 0; hours = 0;
+            updateDisplay();
+            document.getElementById("laps").innerHTML = "";
+        }
+
+        function lapTime() {
+            let lapContainer = document.getElementById("laps");
+            let lapItem = document.createElement("div");
+            lapItem.innerText = document.getElementById("display").innerText;
+            lapContainer.appendChild(lapItem);
+        }
+    </script>
+
+</body>
+</html>
